@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+         
+<h1>New Post</h1>
+    <form method="POST" action="/newpost" novalidate>
+        {{ form.hidden_tag() }}
+
+       
+
+		<div class="form-group">
+		{{ form.submit }}
+		</div>
+         
+    </form>
+
+{% endblock %}

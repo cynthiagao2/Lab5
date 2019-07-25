@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h2>Login form</h2>
+
+    <form method="POST" action="/login" novalidate>
+        {{ form.hidden_tag() }}
+
+       
+        
+
+		{{ form.submit }}
+ 
+    </form>
+    
+    <p>New User? <a href="{{ url_for('signup') }}">Click to Register!</a></p>
+    
+{% endblock %}
