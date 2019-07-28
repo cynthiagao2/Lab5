@@ -9,15 +9,24 @@
 
      {% endif %}
 
+     {% for p in posts %}
+     <p>Author number{{ p.author }}: {{ p.content }}</p>
+     {% endfor %}
+
      {% if session_username is defined %}
      	<form action="/logout" method="POST">
      		<button type="submit"> Log out </button>
      	</form>
 
+          <form action="/newpost" method="GET">
+               <button type="submit"> New Post </button>
+          </form>
+
      {% else %}
      	<form action="/login" method="GET">
      		<button type="submit"> Log in </button>
      	</form>
+          
      	<form action="/signup" method="GET">
      		<button type="submit"> Sign up </button>
      	</form>

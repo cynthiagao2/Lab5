@@ -15,9 +15,11 @@ db.init_app(app)
 def index():
 	if 'username' in session:
 		session_user = User.query.filter_by(username=session['username']).first()
-		return render_template('index.html', title='Home', session_username=session_user.username)
+		posts = Post.query.filter_by(author=session_user.uid).all()
+		return render_template('index.html', title='Home', posts=posts, session_username=session_user.username)
 	else:
-		return render_template('index.html', title='Home')
+		all_posts = Post.query.all()
+		return render_template('index.html', title='Home', posts=all_posts)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -50,13 +52,13 @@ def login():
 
 		user = User.query.filter_by(username=username).first()
 
-			if user is None or not sha256_crypt.verify(password, user.password):
-				flash('Invalid username or password')
-				return redirect(url_for('login'))
+		if user is None or not sha256_crypt.verify(password, user.password):
+			flash('Invalid username or password')
+			return redirect(url_for('login'))
 
-			else: 
-				session['username'] = username
-				return redirect(url_for('index'))
+		else: 
+			session['username'] = username
+			return redirect(url_for('index'))
 	else: 
 		return render_template('login.html', title='Login', form=form)
     
@@ -68,11 +70,16 @@ def logout():
     
 @app.route('/newpost', methods=['GET', 'POST'])
 def newpost():
-	
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-	
+	form = NewpostForm()
+	if request.method == 'POST':
+		session_user = User.query.filter_by(username=session['username']).first()
+		content = request.form['content']
+		new_post = Post(author=session_user.uid, content=content)
+		db.session.add(new_post)
+		db.session.commit()
+		return redirect(url_for('index'))
+	else:
+		return render_template('newpost.html', title='Newpost', form=form)
 
 if __name__ == "__main__":
     app.run(debug=True)
